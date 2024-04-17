@@ -5,6 +5,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.medlink.models.ErrorResponse;
 import com.medlink.models.HospitalModel;
 import com.medlink.models.LoginRequest;
+import com.medlink.models.LoginResponse;
+import com.medlink.models.PatientInfo;
 import com.medlink.models.UserModel;
 import com.medlink.services.UserService;
 
@@ -15,7 +17,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -23,32 +24,28 @@ import org.springframework.web.bind.annotation.RequestBody;
 public class Controller {
     @Autowired
     UserService uService;
+    LoginResponse l;
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest user) {
         try {
-            return ResponseEntity.ok(this.uService.login(user));
+            l = new LoginResponse(this.uService.login(user));
+            return ResponseEntity.ok().body(l);
         } catch (Exception e) {
             ErrorResponse errorResponse = new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
         }
     }
-    
 
     @PostMapping("/signup")
     public ResponseEntity<?> signUp(@RequestBody UserModel user) {
         try {
-            return ResponseEntity.ok(this.uService.signUp(user));
+            l = new LoginResponse(this.uService.signUp(user));
+            return ResponseEntity.ok(l);
         } catch (Exception e) {
             ErrorResponse errorResponse = new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
         }
-    }
-
-    @PostMapping("/details")
-    public String patientDetails(@RequestBody String entity) {
-        // TODO: process POST request
-        return entity;
     }
 
     @GetMapping("/hospitals/{location}")
@@ -59,8 +56,9 @@ public class Controller {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
+
     @PostMapping("/hospitals/upload")
-    public ResponseEntity<?> postHospitals(@RequestBody List<HospitalModel>l) {
+    public ResponseEntity<?> postHospitals(@RequestBody List<HospitalModel> l) {
         try {
             return ResponseEntity.ok(this.uService.postHospitals(l));
         } catch (Exception e) {
@@ -69,17 +67,13 @@ public class Controller {
     }
 
     @PostMapping("/appointment")
-    public String postAppointment(@RequestBody String entity) {
-        // TODO: process POST request
-
-        return entity;
+    public PatientInfo postAppointment(@RequestBody PatientInfo p) {
+        return this.uService.postPatientInfo(p);
     }
 
-    @GetMapping("/appointment")
-    public String getAppointment(@RequestBody String token) {
-        // TODO: process GET request
-
-        return token;
+    @GetMapping("/appointment/{id}")
+    public List<PatientInfo> getAppointment(@PathVariable long id) {
+        return this.uService.getPatientInfo(id);
     }
 
 }

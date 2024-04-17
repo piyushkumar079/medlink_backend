@@ -9,8 +9,10 @@ import org.springframework.stereotype.Service;
 import com.medlink.models.HospitalModel;
 import com.medlink.models.JwtRequest;
 import com.medlink.models.LoginRequest;
+import com.medlink.models.PatientInfo;
 import com.medlink.models.UserModel;
 import com.medlink.repository.HospitalRepository;
+import com.medlink.repository.PatientInfoRepository;
 import com.medlink.repository.UserRepository;
 import com.medlink.utils.JwtUtils;
 
@@ -24,6 +26,9 @@ public class UserService {
 
     @Autowired
     JwtUtils jwt;
+
+    @Autowired
+    PatientInfoRepository pRepository;
 
     public boolean authenticate(String token, JwtRequest user) {
         return this.jwt.validateToken(token, user);
@@ -78,6 +83,13 @@ public class UserService {
         } catch (Exception e) {
             throw new Exception("Error saving the hospitals");
         }
+    }
+
+    public PatientInfo postPatientInfo(PatientInfo p){
+        return this.pRepository.save(p);
+    }
+    public List<PatientInfo> getPatientInfo(long id){
+        return this.pRepository.findAllByPatientId(id);
     }
 
 }

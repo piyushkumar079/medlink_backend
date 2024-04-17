@@ -1,13 +1,16 @@
 package com.medlink.models;
 
-import java.time.LocalDateTime;
-
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+
+import jakarta.annotation.Generated;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 // import jakarta.persistence.GeneratedValue;
@@ -16,14 +19,18 @@ import lombok.Data;
 
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
 public class PatientInfo {
 
     @Id
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private long id;
+
+    private Long patientId;
 
     @NotBlank(message = "Name is required")
-    private String name;
+    private String fullName;
 
     @NotBlank(message = "Email is required")
     @Email(message = "Invalid email format")
@@ -33,16 +40,18 @@ public class PatientInfo {
     private String phone;
 
     @NotNull(message = "Appointment date and time are required")
-    private LocalDateTime dateTime;
+    private String date;
+    @NotNull(message = "Appointment date and time are required")
+    // @NotNull(message = "Appointment date and time are required")
+    private String message;
 
-    // @JsonIgnore
-    // @OneToOne
-    // private UserModel user;
+    /*
+     * fullName: '',
+     * email: '',
+     * phone: '',
+     * date: '',
+     * time: '',
+     * message: ''
+     */
 
-    public PatientInfo(String name, String email, String phone, LocalDateTime dateTime) {
-        this.name = name;
-        this.email = email;
-        this.phone = phone;
-        this.dateTime = dateTime;
-    }
 }
