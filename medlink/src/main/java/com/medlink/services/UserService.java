@@ -1,9 +1,10 @@
 package com.medlink.services;
 
 import java.util.List;
-
+import com.medlink.models.ContactModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import com.medlink.repository.ContactRepository;
 
 
 import com.medlink.models.HospitalModel;
@@ -29,6 +30,9 @@ public class UserService {
 
     @Autowired
     PatientInfoRepository pRepository;
+
+    @Autowired
+    ContactRepository contactRepository;
 
     public boolean authenticate(String token, JwtRequest user) {
         return this.jwt.validateToken(token, user);
@@ -91,5 +95,11 @@ public class UserService {
     public List<PatientInfo> getPatientInfo(long id){
         return this.pRepository.findAllByPatientId(id);
     }
-
+    public ContactModel getContact(ContactModel contact) throws Exception {
+        try {
+            return contactRepository.save(contact);
+        } catch (Exception e) {
+            throw new Exception("Error saving contact: " + e.getMessage());
+        }
+    }
 }
