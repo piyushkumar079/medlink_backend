@@ -1,7 +1,7 @@
 package com.medlink.controllers;
 
 import org.springframework.web.bind.annotation.RestController;
-
+import com.medlink.models.ContactModel;
 import com.medlink.models.ErrorResponse;
 import com.medlink.models.HospitalModel;
 import com.medlink.models.LoginRequest;
@@ -76,4 +76,8 @@ public class Controller {
         return this.uService.getPatientInfo(id);
     }
 
+    @PostMapping("/contact")
+    public ContactModel contact(@RequestBody ContactModel contactuser) throws Exception{
+    return this.uService.getContact(contactuser);
+    }
 }
