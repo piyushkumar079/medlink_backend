@@ -45,13 +45,7 @@ public class PatientInfo {
     // @NotNull(message = "Appointment date and time are required")
     private String message;
 
-    /*
-     * fullName: '',
-     * email: '',
-     * phone: '',
-     * date: '',
-     * time: '',
-     * message: ''
-     */
+    private String time;
+  
 
 }
