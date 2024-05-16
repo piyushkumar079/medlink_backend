@@ -1,5 +1,4 @@
 package com.medlink.controllers;
-
 import org.springframework.web.bind.annotation.RestController;
 import com.medlink.models.ContactModel;
 import com.medlink.models.ErrorResponse;
@@ -9,9 +8,7 @@ import com.medlink.models.LoginResponse;
 import com.medlink.models.PatientInfo;
 import com.medlink.models.UserModel;
 import com.medlink.services.UserService;
-
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,64 +17,72 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
+
 @RestController
 public class Controller {
     @Autowired
-    UserService uService;
-    LoginResponse ResponeObject;
+    private UserService userService;
+    private LoginResponse responseObject;
 
+    // Login endpoint
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest user) {
         try {
-            ResponeObject = new LoginResponse(this.uService.login(user));
-            return ResponseEntity.ok().body(ResponeObject);
+            responseObject = new LoginResponse(userService.login(user));
+            return ResponseEntity.ok().body(responseObject);
         } catch (Exception e) {
             ErrorResponse errorResponse = new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
         }
     }
-
+    
+    // Signup endpoint
     @PostMapping("/signup")
     public ResponseEntity<?> signUp(@RequestBody UserModel user) {
         try {
-            ResponeObject = new LoginResponse(this.uService.signUp(user));
-            return ResponseEntity.ok(ResponeObject);
+            responseObject = new LoginResponse(userService.signUp(user));
+            return ResponseEntity.ok(responseObject);
         } catch (Exception e) {
             ErrorResponse errorResponse = new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
         }
     }
 
+    // Get hospitals by location endpoint
     @GetMapping("/hospitals/{location}")
     public ResponseEntity<?> getHospitals(@PathVariable String location) {
         try {
-            return ResponseEntity.ok(this.uService.getHospitals(location));
+            return ResponseEntity.ok(userService.getHospitals(location));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
 
+    // Upload hospitals endpoint
     @PostMapping("/hospitals/upload")
-    public ResponseEntity<?> postHospitals(@RequestBody List<HospitalModel> ResponeObject) {
+    public ResponseEntity<?> postHospitals(@RequestBody List<HospitalModel> hospitalList) {
         try {
-            return ResponseEntity.ok(this.uService.postHospitals(ResponeObject));
+            return ResponseEntity.ok(userService.postHospitals(hospitalList));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
 
+    // Post appointment endpoint
     @PostMapping("/appointment")
-    public PatientInfo postAppointment(@RequestBody PatientInfo p) {
-        return this.uService.postPatientInfo(p);
+    public PatientInfo postAppointment(@RequestBody PatientInfo patientInfo) {
+        return userService.postPatientInfo(patientInfo);
     }
 
+    // Get appointment by ID endpoint
     @GetMapping("/appointment/{id}")
     public List<PatientInfo> getAppointment(@PathVariable long id) {
-        return this.uService.getPatientInfo(id);
+        return userService.getPatientInfo(id);
     }
 
+    // Contact endpoint
     @PostMapping("/contact")
-    public ContactModel contact(@RequestBody ContactModel contactuser) throws Exception{
-    return this.uService.getContact(contactuser);
+    public ContactModel contact(@RequestBody ContactModel contactModel) throws Exception {
+        return userService.getContact(contactModel);
     }
 }

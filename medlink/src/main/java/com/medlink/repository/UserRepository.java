@@ -6,7 +6,6 @@ import org.springframework.stereotype.Repository;
 import com.medlink.models.UserModel;
 @Repository
 public interface UserRepository extends JpaRepository<UserModel,Integer>{
-
     UserModel findByEmail(String string);
     
 }

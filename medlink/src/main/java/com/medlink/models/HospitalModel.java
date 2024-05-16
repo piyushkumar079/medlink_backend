@@ -1,5 +1,4 @@
 package com.medlink.models;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -9,30 +8,33 @@ import javax.validation.constraints.NotBlank;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+
+
 @Entity
 @Data
 @NoArgsConstructor
 public class HospitalModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) 
-    Long id; 
+    private Long id; 
 
     @NotBlank(message = "Name is required")
     @Column(nullable = false)
-    String name;
+    private String name;
 
     @NotBlank(message = "Address is required")
     @Column(nullable = false)
-    String address;
+    private String address;
 
     @NotBlank(message = "Location is required")
     @Column(nullable = false)
-    String location;
+    private String location;
 
     @NotBlank(message = "Contact info is required")
     @Column(nullable = false)
-    String contactInfo;
+    private String contactInfo;
 
-    @NotBlank(message = "beds info is required")
-    int beds;
+    @NotBlank(message = "Beds info is required")
+    @Column(nullable = false)
+    private Integer beds;
 }
