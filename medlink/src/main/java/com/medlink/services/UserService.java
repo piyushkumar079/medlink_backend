@@ -1,4 +1,5 @@
 package com.medlink.services;
+
 import java.time.*;
 import java.util.List;
 import java.util.*;
@@ -12,7 +13,6 @@ import org.hibernate.type.descriptor.java.LocalDateJavaType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.medlink.repository.ContactRepository;
-
 
 import com.medlink.models.HospitalModel;
 import com.medlink.models.JwtRequest;
@@ -30,6 +30,7 @@ import jakarta.mail.MessagingException;
 import java.time.LocalDate;
 import java.util.Optional;
 import java.time.LocalDateTime;
+
 @Service
 public class UserService {
     @Autowired
@@ -81,19 +82,23 @@ public class UserService {
     }
 
     // public String signUp(UserModel user) throws Exception {
-    //     try {
-    //         if (userRepository.findByEmail(user.getEmail()) != null) {
-    //             throw new Exception("User Already Exists");
-    //         }
-    //         UserModel s = userRepository.save(user);
-    //         JwtRequest u = new JwtRequest(s.getEmail(), s.getId());
-    //         return createToken(u);
-    //     } catch (Exception e) {
-    //         throw new Exception("Error SigningUp: " + e.getMessage());
-    //     }
+    // try {
+    // if (userRepository.findByEmail(user.getEmail()) != null) {
+    // throw new Exception("User Already Exists");
+    // }
+    // UserModel s = userRepository.save(user);
+    // JwtRequest u = new JwtRequest(s.getEmail(), s.getId());
+    // return createToken(u);
+    // } catch (Exception e) {
+    // throw new Exception("Error SigningUp: " + e.getMessage());
+    // }
     // }
 
-    public String register(UserModel user) {
+    public String register(UserModel user) throws Exception {
+        UserModel check= userRepository.findByEmail(user.getEmail());
+        if(check!=null){
+            throw new Exception("User Already Exists");
+        }
         String otp = otpUtil.generateOtp();
         try {
             emailUtil.sendOtpEmail(user.getEmail(), otp);
@@ -106,45 +111,47 @@ public class UserService {
         userRepository.save(user);
         return "User registration successful";
     }
-Duration duration= new Duration(0);
 
     public String verifyAccount(String email, String otp) throws Exception {
 
         UserModel user = userRepository.findByEmail(email);
-        if(user == null) {
+        if (user == null) {
             throw new RuntimeException("User not found with this email: " + email);
         }
-        try{
-        if (user.getOtp().equals(otp) && user.getOtpGeneratedTime().plusMinutes(5).isAfter(LocalDateTime.now()) ){
-            user.setActive(true);
-            UserModel s = userRepository.save(user);
-            JwtRequest u = new JwtRequest(s.getEmail(), s.getId());
-            return createToken(u);
-        } 
-    }catch (Exception e) {
+        try {
+            if (user.getOtp().equals(otp) && user.getOtpGeneratedTime().plusMinutes(5).isAfter(LocalDateTime.now())) {
+                user.setActive(true);
+                UserModel s = userRepository.save(user);
+                JwtRequest jwtRequest= new JwtRequest(s.getEmail(), s.getId());
+                String JWTTOKEN=jwt.generateToken(jwtRequest);
+                return JWTTOKEN;
+            }
+        } catch (Exception e) {
             throw new Exception("Error SigningUp: " + e.getMessage());
         }
         
-        return "Please regenerate otp and try again";
+        return null;
+        // return "Please regenerate otp and try again";
     }
+
     public String regenerateOtp(String email) {
         UserModel user = userRepository.findByEmail(email);
 
-        if(user == null) {
+        if (user == null) {
             throw new RuntimeException("User not found with this email: " + email);
         }
         String otp = otpUtil.generateOtp();
         try {
-          emailUtil.sendOtpEmail(email, otp);
+            emailUtil.sendOtpEmail(email, otp);
         } catch (MessagingException e) {
-          throw new RuntimeException("Unable to send otp please try again");
+            throw new RuntimeException("Unable to send otp please try again");
         }
         user.setOtp(otp);
         user.setOtpGeneratedTime(LocalDateTime.now());
         userRepository.save(user);
         return "Email sent... please verify account within 1 minute";
-      }
-    
+    }
+
     public List<HospitalModel> getHospitals(String location) throws Exception {
         try {
             return hRepository.findAllByLocation(location);
@@ -177,5 +184,3 @@ Duration duration= new Duration(0);
         }
     }
 }
-
-
