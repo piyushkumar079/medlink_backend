@@ -3,12 +3,17 @@ package com.medlink.models;
 import lombok.*;
 import jakarta.persistence.*;
 import javax.validation.constraints.*;
-// import jakarta.persistence.Id;
-// import lombok.NoArgsConstructor;
-// import jakarta.persistence.Entity;
-// import jakarta.persistence.GeneratedValue;
-// import jakarta.persistence.GenerationType;
-// import javax.validation.constraints.NotBlank;
+
+import org.hibernate.type.descriptor.java.LocalDateJavaType;
+
+import jakarta.persistence.Id;
+import lombok.NoArgsConstructor;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import javax.validation.constraints.NotBlank;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
@@ -32,11 +37,19 @@ public class UserModel {
 
     @NotBlank(message = "Last name is required")
     private String lastname;
+    private boolean active;
+    private String otp;
+    private LocalDateTime otpGeneratedTime;
 
     public UserModel(String email, String password, String firstname, String lastname) {
         this.email = email;
         this.password = password;
         this.firstname = firstname;
         this.lastname = lastname;
+        this.active = false;
+        this.otp = null;
+        this.otpGeneratedTime = null;
     }
+
+  
 }
