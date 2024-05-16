@@ -35,7 +35,8 @@ public class Controller {
             responseObject = new LoginResponse(uService.login(user), 200);
             return ResponseEntity.ok().body(responseObject);
         } catch (Exception e) {
-            ErrorResponse errorResponse = new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Login failed. Please check your credentials and try again.");
+            ErrorResponse errorResponse = new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                    "Login failed. Please check your credentials and try again.");
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
         }
     }
@@ -47,7 +48,6 @@ public class Controller {
             ErrorResponse successResponse = new ErrorResponse(200, response);
             return ResponseEntity.ok().body(successResponse);
         } catch (Exception ex) {
-            String response = ex.getMessage();
             ErrorResponse errorResponse = new ErrorResponse(500, "Registration failed. Please try again later.");
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
         }
@@ -55,7 +55,7 @@ public class Controller {
 
     @PutMapping("/verify-account")
     public ResponseEntity<?> verifyAccount(@RequestParam String email,
-                                           @RequestParam String otp) {
+            @RequestParam String otp) {
         try {
             String token = uService.verifyAccount(email, otp);
             if (token == null) {
@@ -76,7 +76,8 @@ public class Controller {
         try {
             return ResponseEntity.ok(uService.getHospitals(location));
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to fetch hospitals. Please try again later.");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Failed to fetch hospitals. Please try again later.");
         }
     }
 
@@ -86,7 +87,8 @@ public class Controller {
         try {
             return ResponseEntity.ok(uService.postHospitals(hospitalList));
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to upload hospitals. Please try again later.");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Failed to upload hospitals. Please try again later.");
         }
     }
 
@@ -97,7 +99,8 @@ public class Controller {
             PatientInfo savedPatientInfo = uService.postPatientInfo(patientInfo);
             return ResponseEntity.ok(savedPatientInfo);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to create appointment. Please try again later.");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Failed to create appointment. Please try again later.");
         }
     }
 
@@ -108,7 +111,8 @@ public class Controller {
             List<PatientInfo> patientInfoList = uService.getPatientInfo(id);
             return ResponseEntity.ok(patientInfoList);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to fetch appointment information. Please try again later.");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Failed to fetch appointment information. Please try again later.");
         }
     }
 
@@ -119,7 +123,8 @@ public class Controller {
             ContactModel savedContact = uService.getContact(contactModel);
             return ResponseEntity.ok(savedContact);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to submit contact information. Please try again later.");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Failed to submit contact information. Please try again later.");
         }
     }
 }

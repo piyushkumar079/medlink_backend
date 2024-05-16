@@ -44,6 +44,7 @@ public class JwtUtils {
 		return claimsResolver.apply(claims);
 	}
 
+	@SuppressWarnings("deprecation")
 	private Claims getAllClaimsFromToken(String token) {
 		return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
 	}

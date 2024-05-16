@@ -1,19 +1,10 @@
 package com.medlink.services;
 
-import java.time.*;
 import java.util.List;
-import java.util.*;
-import ch.qos.logback.core.util.Duration;
-// import com.example.registerapp.util.EmailUtil;
-// import com.medlink.registerapp.util.OtpUtil;
-import com.medlink.dto.RegisterDto;
 import com.medlink.models.ContactModel;
-
-import org.hibernate.type.descriptor.java.LocalDateJavaType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.medlink.repository.ContactRepository;
-
 import com.medlink.models.HospitalModel;
 import com.medlink.models.JwtRequest;
 import com.medlink.models.LoginRequest;
@@ -27,8 +18,6 @@ import com.medlink.utils.EmailUtil;
 import com.medlink.utils.OtpUtil;
 
 import jakarta.mail.MessagingException;
-import java.time.LocalDate;
-import java.util.Optional;
 import java.time.LocalDateTime;
 
 @Service
@@ -81,22 +70,9 @@ public class UserService {
         }
     }
 
-    // public String signUp(UserModel user) throws Exception {
-    // try {
-    // if (userRepository.findByEmail(user.getEmail()) != null) {
-    // throw new Exception("User Already Exists");
-    // }
-    // UserModel s = userRepository.save(user);
-    // JwtRequest u = new JwtRequest(s.getEmail(), s.getId());
-    // return createToken(u);
-    // } catch (Exception e) {
-    // throw new Exception("Error SigningUp: " + e.getMessage());
-    // }
-    // }
-
     public String register(UserModel user) throws Exception {
-        UserModel check= userRepository.findByEmail(user.getEmail());
-        if(check!=null){
+        UserModel check = userRepository.findByEmail(user.getEmail());
+        if (check != null) {
             throw new Exception("User Already Exists");
         }
         String otp = otpUtil.generateOtp();
@@ -122,14 +98,14 @@ public class UserService {
             if (user.getOtp().equals(otp) && user.getOtpGeneratedTime().plusMinutes(5).isAfter(LocalDateTime.now())) {
                 user.setActive(true);
                 UserModel s = userRepository.save(user);
-                JwtRequest jwtRequest= new JwtRequest(s.getEmail(), s.getId());
-                String JWTTOKEN=jwt.generateToken(jwtRequest);
+                JwtRequest jwtRequest = new JwtRequest(s.getEmail(), s.getId());
+                String JWTTOKEN = jwt.generateToken(jwtRequest);
                 return JWTTOKEN;
             }
         } catch (Exception e) {
             throw new Exception("Error SigningUp: " + e.getMessage());
         }
-        
+
         return null;
         // return "Please regenerate otp and try again";
     }
@@ -184,3 +160,16 @@ public class UserService {
         }
     }
 }
+
+// public String signUp(UserModel user) throws Exception {
+// try {
+// if (userRepository.findByEmail(user.getEmail()) != null) {
+// throw new Exception("User Already Exists");
+// }
+// UserModel s = userRepository.save(user);
+// JwtRequest u = new JwtRequest(s.getEmail(), s.getId());
+// return createToken(u);
+// } catch (Exception e) {
+// throw new Exception("Error SigningUp: " + e.getMessage());
+// }
+// }
