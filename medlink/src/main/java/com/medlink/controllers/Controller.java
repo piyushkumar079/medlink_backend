@@ -15,12 +15,17 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+import com.medlink.config.CorsConfig;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:3000")
 public class Controller {
     @Autowired
     UserService uService;
@@ -37,16 +42,32 @@ public class Controller {
         }
     }
 
-    @PostMapping("/signup")
-    public ResponseEntity<?> signUp(@RequestBody UserModel user) {
-        try {
-            l = new LoginResponse(this.uService.signUp(user));
-            return ResponseEntity.ok(l);
-        } catch (Exception e) {
-            ErrorResponse errorResponse = new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
-        }
-    }
+    @PostMapping("/register")
+  public ResponseEntity<String> register(@RequestBody UserModel user) {
+    return new ResponseEntity<>(uService.register(user), HttpStatus.OK);
+  }
+
+  @PutMapping("/verify-account")
+  public ResponseEntity<String> verifyAccount(@RequestParam String email,
+      @RequestParam String otp) {
+    return new ResponseEntity<>(uService.verifyAccount(email, otp), HttpStatus.OK);
+  }
+
+  @PutMapping("/regenerate-otp")
+  public ResponseEntity<String> regenerateOtp(@RequestParam String email) {
+    return new ResponseEntity<>(uService.regenerateOtp(email), HttpStatus.OK);
+  }
+
+    // @PostMapping("/signup")
+    // public ResponseEntity<?> signUp(@RequestBody UserModel user) {
+    //     try {
+    //         l = new LoginResponse(this.uService.signUp(user));
+    //         return ResponseEntity.ok(l);
+    //     } catch (Exception e) {
+    //         ErrorResponse errorResponse = new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
+    //         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+    //     }
+    // }
 
     @GetMapping("/hospitals/{location}")
     public ResponseEntity<?> getHospitals(@PathVariable String location) {
