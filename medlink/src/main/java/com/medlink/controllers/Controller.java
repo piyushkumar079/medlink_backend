@@ -29,13 +29,13 @@ import com.medlink.config.CorsConfig;
 public class Controller {
     @Autowired
     UserService uService;
-    LoginResponse l;
+    LoginResponse ResponeObject;
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest user) {
         try {
-            l = new LoginResponse(this.uService.login(user));
-            return ResponseEntity.ok().body(l);
+            ResponeObject = new LoginResponse(this.uService.login(user));
+            return ResponseEntity.ok().body(ResponeObject);
         } catch (Exception e) {
             ErrorResponse errorResponse = new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
@@ -68,6 +68,16 @@ public class Controller {
     //         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
     //     }
     // }
+    @PostMapping("/signup")
+    public ResponseEntity<?> signUp(@RequestBody UserModel user) {
+        try {
+            ResponeObject = new LoginResponse(this.uService.signUp(user));
+            return ResponseEntity.ok(ResponeObject);
+        } catch (Exception e) {
+            ErrorResponse errorResponse = new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+        }
+    }
 
     @GetMapping("/hospitals/{location}")
     public ResponseEntity<?> getHospitals(@PathVariable String location) {
@@ -79,9 +89,9 @@ public class Controller {
     }
 
     @PostMapping("/hospitals/upload")
-    public ResponseEntity<?> postHospitals(@RequestBody List<HospitalModel> l) {
+    public ResponseEntity<?> postHospitals(@RequestBody List<HospitalModel> ResponeObject) {
         try {
-            return ResponseEntity.ok(this.uService.postHospitals(l));
+            return ResponseEntity.ok(this.uService.postHospitals(ResponeObject));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
