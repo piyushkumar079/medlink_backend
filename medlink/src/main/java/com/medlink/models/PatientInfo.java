@@ -8,13 +8,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-
-// import jakarta.persistence.GeneratedValue;
-// import jakarta.persistence.GenerationType;
-// import jakarta.persistence.OneToOne;
+import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
@@ -38,12 +34,12 @@ public class PatientInfo {
     @NotBlank(message = "Phone number is required")
     private String phone;
 
-    @NotNull(message = "Appointment date and time are required")
+    @NotNull(message = "Appointment date is required")
     private String date;
-    @NotNull(message = "Appointment date and time are required")
-    // @NotNull(message = "Appointment date and time are required")
-    private String message;
 
+    @NotBlank(message = "Appointment time is required")
     private String time;
 
+    @NotBlank(message = "Additional information is required")
+    private String message;
 }

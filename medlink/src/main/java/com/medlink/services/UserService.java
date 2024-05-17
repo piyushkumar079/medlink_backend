@@ -144,8 +144,10 @@ public class UserService {
         }
     }
 
-    public PatientInfo postPatientInfo(PatientInfo p) {
-        return this.pRepository.save(p);
+    public PatientInfo postPatientInfo(PatientInfo p) throws Exception {
+        PatientInfo patientInfo = this.pRepository.save(p);
+        emailUtil.sendAppointmentConfirmationEmail(p.getEmail(), p.getFullName(), p.getDate(), p.getTime());
+        return patientInfo;
     }
 
     public List<PatientInfo> getPatientInfo(long id) {
