@@ -28,15 +28,11 @@ The Hospital API is designed to provide functionalities for managing hospitals, 
 
 To get started with the Hospital API, follow these steps:
 
-1. **Clone the Repository**: `git clone https://github.com/your-username/hospital-api.git`
+1. **Clone the Repository**: `git clone https://github.com/piyushkumar079/medlink_backend`
 2. **Navigate to Project Directory**: `cd hospital-api`
 3. **Build the Application**: `./mvnw clean package`
 4. **Run Docker Compose**: `docker-compose up`
-5. **Access the API**: The API will be available at `http://localhost:8080`
-
-## API Documentation
-
-Detailed API documentation is available at `http://localhost:8080/swagger-ui.html`. Use this documentation to explore available endpoints and their functionalities.
+5. **Access the API**: The API will be available at `http://localhost:4000`
 
 ## Contributing
 
