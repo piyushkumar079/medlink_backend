@@ -9,11 +9,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.medlink.models.PatientInfo;
 import com.medlink.services.UserService;
+
 @RestController
 public class PostAppointment {
     @Autowired
     private UserService uService;
-        @PostMapping("/appointment")
+
+    @PostMapping("/appointment")
     public ResponseEntity<?> postAppointment(@RequestBody PatientInfo patientInfo) {
         try {
             PatientInfo savedPatientInfo = uService.postPatientInfo(patientInfo);

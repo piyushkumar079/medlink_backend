@@ -13,7 +13,8 @@ import com.medlink.services.UserService;
 @RestController
 public class Contact {
     @Autowired
-    private UserService uService; 
+    private UserService uService;
+
     @PostMapping("/contact")
     public ResponseEntity<?> contact(@RequestBody ContactModel contactModel) {
         try {

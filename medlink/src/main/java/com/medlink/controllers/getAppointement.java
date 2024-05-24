@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.medlink.models.PatientInfo;
 import com.medlink.services.UserService;
+
 @RestController
 public class getAppointement {
     @Autowired
